@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
@@ -17,10 +18,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={inter.className}>
-				<Theme>{children}</Theme>
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang="en">
+				<body className={inter.className}>
+					<Theme>{children}</Theme>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }
