@@ -1,3 +1,4 @@
+import { css } from "@/styled-system/css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
@@ -19,9 +20,20 @@ export default function RootLayout({
 }>) {
 	return (
 		<ClerkProvider>
-			<html lang="en">
+			<html
+				lang="en"
+				className={css({
+					height: "full",
+				})}
+			>
 				<body className={inter.className}>
-					<Theme>{children}</Theme>
+					<Theme
+						className={css({
+							height: "full",
+						})}
+					>
+						{children}
+					</Theme>
 				</body>
 			</html>
 		</ClerkProvider>

@@ -1,5 +1,5 @@
+import { css } from "@/styled-system/css";
 import { SignIn } from "@clerk/nextjs";
-import { css } from "../../../../styled-system/css";
 
 export default function Page() {
 	return (
