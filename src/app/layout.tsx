@@ -2,6 +2,7 @@ import { css } from "@/styled-system/css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+import "@total-typescript/ts-reset";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
