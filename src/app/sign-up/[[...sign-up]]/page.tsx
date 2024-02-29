@@ -1,15 +1,8 @@
-import { css } from "@/styled-system/css";
 import { SignUp } from "@clerk/nextjs";
 
 export default function Page() {
 	return (
-		<div
-			className={css({
-				display: "flex",
-				justifyContent: "center",
-				paddingTop: "24",
-			})}
-		>
+		<div className="flex justify-center pt-24">
 			<SignUp />
 		</div>
 	);

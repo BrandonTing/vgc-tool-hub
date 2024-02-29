@@ -16,7 +16,7 @@ const converted = Object.entries(Moves).reduce(
 );
 Bun.write(
 	"./src/lib/teamcheck/moves.ts",
-	`export const Moves: Record<string, {type: string, basePower: number, category: string}> = ${Bun.inspect(
-		converted,
-	)}`,
+	`import { MoveList } from "./check";
+
+	export const Moves: MoveList = ${Bun.inspect(converted)}`,
 );
