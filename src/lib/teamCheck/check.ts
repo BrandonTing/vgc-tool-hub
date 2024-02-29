@@ -92,6 +92,7 @@ function checkHasEffectiveMoveAgainstType(
 		if (!pokemon.moves) return false;
 		for (const move of pokemon.moves) {
 			if (!Moves[move]) continue;
+			if (Moves[move].category === "Status") continue;
 			const effectiveness = getEffectivenessOnPokemon(
 				Moves[move].type as Type,
 				targetType,

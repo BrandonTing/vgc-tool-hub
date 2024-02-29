@@ -1,5 +1,6 @@
 import Nav from "@/components/nav";
 import { css } from "@/styled-system/css";
+import { container } from "@/styled-system/patterns";
 import { UserButton } from "@clerk/nextjs";
 
 export default function AuthLayout({
@@ -35,7 +36,7 @@ export default function AuthLayout({
 				</span>
 			</header>
 			<div
-				className={css({
+				className={container({
 					flexGrow: 1,
 				})}
 			>

@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-move": "bun run ./src/script/convertShowdownMove"
+    "generate-move": "bun run ./script/convertShowdownMove"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",

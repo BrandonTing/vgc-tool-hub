@@ -5,10 +5,14 @@ const converted = Object.entries(Moves).reduce(
 			type: val.type,
 			basePower: val.basePower,
 			category: val.category,
+			name: val.name,
 		};
 		return pre;
 	},
-	{} as Record<string, { type: string; basePower: number; category: string }>,
+	{} as Record<
+		string,
+		{ type: string; basePower: number; category: string; name: string }
+	>,
 );
 Bun.write(
 	"./src/lib/teamcheck/moves.ts",
