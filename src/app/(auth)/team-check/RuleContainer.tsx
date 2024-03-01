@@ -22,7 +22,11 @@ export default function RuleContainer() {
 			<CardContent>
 				<ul>
 					<li>
-						<MoveRule />
+						<MoveRule
+							addMoveRule={(move) => {
+								console.log(move);
+							}}
+						/>
 					</li>
 					<Separator className="my-4" />
 					<li>隊伍中對於屬性具備抗性</li>
