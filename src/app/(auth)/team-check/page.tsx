@@ -5,11 +5,11 @@ export default function Home() {
 	return (
 		<div className="flex gap-2 w-full">
 			{/* Rules */}
-			<div className="flex-grow">
+			<div className="w-1/2">
 				<RuleContainer />
 			</div>
 			{/* Selected Rules */}
-			<div className="flex-grow">
+			<div className="w-1/2">
 				<SelectedContainer />
 			</div>
 		</div>

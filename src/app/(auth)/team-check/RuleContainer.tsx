@@ -7,6 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
@@ -23,30 +24,32 @@ export default function RuleContainer() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<ul>
-					<li>
-						<MoveRule
-							addMoveRule={(move) => {
-								setRule((prev) => [
-									...prev,
-									{
-										type: "hasMove",
-										move,
-									},
-								]);
-							}}
-						/>
-					</li>
-					<Separator className="my-4" />
-					<li>隊伍中對於屬性具備抗性</li>
-					<Separator className="my-4" />
-					<li>隊伍中具備對特定屬性具備倍率效果之招式</li>
-					<Separator className="my-4" />
-					<li>隊伍中具備能力值高於特定數值之寶可夢</li>
-					<Separator className="my-4" />
-					<li>隊伍中具備能力值低於特定數值之寶可夢</li>
-					<Separator className="my-4" />
-				</ul>
+				<ScrollArea className="h-80">
+					<ul>
+						<li>
+							<MoveRule
+								addMoveRule={(move) => {
+									setRule((prev) => [
+										...prev,
+										{
+											type: "hasMove",
+											move,
+										},
+									]);
+								}}
+							/>
+						</li>
+						<Separator className="my-4" />
+						<li>隊伍中對於屬性具備抗性</li>
+						<Separator className="my-4" />
+						<li>隊伍中具備對特定屬性具備倍率效果之招式</li>
+						<Separator className="my-4" />
+						<li>隊伍中具備能力值高於特定數值之寶可夢</li>
+						<Separator className="my-4" />
+						<li>隊伍中具備能力值低於特定數值之寶可夢</li>
+						<Separator className="my-4" />
+					</ul>
+				</ScrollArea>
 			</CardContent>
 		</Card>
 	);
