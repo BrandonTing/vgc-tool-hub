@@ -1,6 +1,11 @@
 import { Pokemon, getEffectivenessOnPokemon } from "vgc_data_wrapper";
 import { Moves } from "./moves";
 
+export type MoveList = Record<
+	string,
+	{ type: string; basePower: number; category: string; name: string }
+>;
+
 export type Type = Pokemon["types"][number];
 type StatKey = keyof (Pokemon["stats"] & {});
 
@@ -11,7 +16,7 @@ type StatInput = {
 	value: number;
 };
 
-type CheckRule =
+export type CheckRule =
 	| {
 			type: "hasMove";
 			move: string;

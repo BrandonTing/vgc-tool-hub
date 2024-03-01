@@ -1,11 +1,7 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/quTa9OgdWQx
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { css } from "@/styled-system/css";
-import { headers } from "next/headers";
+"use client";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Path = {
 	label: string;
@@ -19,17 +15,10 @@ function NavLink({
 }: Path & {
 	isActive: boolean;
 }) {
+	const colorClass = isActive ? "text-blue-600" : "text-gray-900";
 	return (
 		<Link
-			className={css({
-				color: "gray.900",
-				"&:hover": {
-					color: "gray.500",
-				},
-				_active: {
-					color: "blue.600",
-				},
-			})}
+			className={cn("hover:text-gray-500", colorClass)}
 			href={url}
 			data-active={isActive}
 		>
@@ -46,20 +35,9 @@ const paths: Array<Path> = [
 ];
 
 export default function Nav() {
-	const headerList = headers();
-	const pathname = headerList.get("next-url") || "";
+	const pathname = usePathname();
 	return (
-		<nav
-			// bg-gray-950 w-full py-4 md:py-6
-			className={css({
-				display: "flex",
-				gap: "0.5rem",
-				fontWeight: "medium",
-				width: "full",
-				paddingY: "6",
-				justifyContent: "center",
-			})}
-		>
+		<nav className="flex gap-2 font-medium w-full py-6 justify-center">
 			{paths.map((path) => (
 				<NavLink
 					key={path.url}

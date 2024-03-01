@@ -1,6 +1,4 @@
 import Nav from "@/components/nav";
-import { css } from "@/styled-system/css";
-import { container } from "@/styled-system/patterns";
 import { UserButton } from "@clerk/nextjs";
 
 export default function AuthLayout({
@@ -9,37 +7,15 @@ export default function AuthLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<div
-			className={css({
-				display: "flex",
-				flexDir: "column",
-				height: "full",
-			})}
-		>
+		<div className="flex h-full flex-col">
 			{/* Header */}
-			<header
-				className={css({
-					display: "flex",
-				})}
-			>
+			<header className="flex">
 				<Nav />
-				<span
-					className={css({
-						justifySelf: "end",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						paddingRight: "5",
-					})}
-				>
+				<span className="justify-center flex justify-self-end items-center pr-5">
 					<UserButton />
 				</span>
 			</header>
-			<div
-				className={container({
-					flexGrow: 1,
-				})}
-			>
+			<div className="flex-grow mx-auto relative px-4 lg:px-8 w-4/5">
 				{children}
 			</div>
 		</div>
