@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import JotaiProvider from "@/store/provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
@@ -31,7 +32,9 @@ export default function RootLayout({
 						fontSans.variable,
 					)}
 				>
-					<Theme className="h-full">{children}</Theme>
+					<JotaiProvider>
+						<Theme className="h-full">{children}</Theme>
+					</JotaiProvider>
 				</body>
 			</html>
 		</ClerkProvider>

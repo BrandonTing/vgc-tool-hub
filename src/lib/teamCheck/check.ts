@@ -16,7 +16,7 @@ type StatInput = {
 	value: number;
 };
 
-type CheckRule =
+export type CheckRule =
 	| {
 			type: "hasMove";
 			move: string;

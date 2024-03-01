@@ -1,4 +1,5 @@
-import RuleContainer from "./RuleContainer";
+import RuleContainer from "./ruleContainer";
+import SelectedContainer from "./selectedContainer";
 
 export default function Home() {
 	return (
@@ -8,7 +9,9 @@ export default function Home() {
 				<RuleContainer />
 			</div>
 			{/* Selected Rules */}
-			<div className="flex-grow">Selected</div>
+			<div className="flex-grow">
+				<SelectedContainer />
+			</div>
 		</div>
 	);
 }

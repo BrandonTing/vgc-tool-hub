@@ -8,9 +8,12 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { MoveRule } from "./Rules";
+import { ruleAtom } from "@/store/rules";
+import { useAtom } from "jotai";
+import { MoveRule } from "./rules";
 
 export default function RuleContainer() {
+	const [, setRule] = useAtom(ruleAtom);
 	return (
 		<Card>
 			<CardHeader>
@@ -24,7 +27,13 @@ export default function RuleContainer() {
 					<li>
 						<MoveRule
 							addMoveRule={(move) => {
-								console.log(move);
+								setRule((prev) => [
+									...prev,
+									{
+										type: "hasMove",
+										move,
+									},
+								]);
 							}}
 						/>
 					</li>

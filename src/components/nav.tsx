@@ -1,11 +1,7 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/quTa9OgdWQx
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+"use client";
 import { cn } from "@/lib/utils";
-import { headers } from "next/headers";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Path = {
 	label: string;
@@ -20,7 +16,6 @@ function NavLink({
 	isActive: boolean;
 }) {
 	const colorClass = isActive ? "text-blue-600" : "text-gray-900";
-
 	return (
 		<Link
 			className={cn("hover:text-gray-500", colorClass)}
@@ -40,8 +35,7 @@ const paths: Array<Path> = [
 ];
 
 export default function Nav() {
-	const headerList = headers();
-	const pathname = headerList.get("next-url") || "";
+	const pathname = usePathname();
 	return (
 		<nav className="flex gap-2 font-medium w-full py-6 justify-center">
 			{paths.map((path) => (

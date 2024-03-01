@@ -25,7 +25,9 @@ export function MoveRule({
 			  })
 			: [];
 	}, [moveKw]);
-
+	const canSubmit = useMemo(() => {
+		return Boolean(moveEntries.find(([key, _]) => key === moveKw));
+	}, [moveKw]);
 	return (
 		<div className="flex justify-between">
 			<div className="flex">
@@ -65,7 +67,8 @@ export function MoveRule({
 				</div>
 			</div>
 			<Button
-				onClick={(e) => {
+				disabled={!canSubmit}
+				onClick={() => {
 					addMoveRule(moveKw);
 					setMoveKw("");
 				}}
