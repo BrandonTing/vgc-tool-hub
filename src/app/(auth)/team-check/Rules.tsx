@@ -3,6 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { PokemonType, Type } from "@/lib/teamCheck/check";
 import { Moves } from "@/lib/teamCheck/moves";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -76,5 +84,66 @@ export function MoveRule({
 				<Plus />
 			</Button>
 		</div>
+	);
+}
+
+export function ResistTypeRule({
+	addRule,
+}: {
+	addRule: (types: PokemonType) => void;
+}) {
+	const [type1, setType1] = useState<Type | "">("");
+	const [type2, setType2] = useState<Type | "">("");
+
+	return (
+		<div className="flex justify-between">
+			<div className="flex">
+				<span className="align-middle py-2">隊伍中對於屬性具備抗性：</span>
+				<div className="flex gap-2">
+					<TypeSelect placeholder="屬性一" value={type1} onSelect={setType1} />
+					<TypeSelect placeholder="屬性二" value={type1} onSelect={setType2} />
+				</div>
+			</div>
+			<Button
+				disabled={!type1 && !type2}
+				onClick={() => {
+					const types: PokemonType = [];
+					if (type1) {
+						types.push(type1);
+					}
+					if (type2) {
+						types.push(type2);
+					}
+					addRule(types);
+					setType1("");
+					setType2("");
+				}}
+			>
+				<Plus />
+			</Button>
+		</div>
+	);
+}
+
+function TypeSelect({
+	placeholder,
+	value,
+	onSelect,
+}: {
+	placeholder: string;
+	value?: Type | "";
+	onSelect: (type: Type | "") => void;
+}) {
+	return (
+		<Select value={value} onValueChange={onSelect}>
+			<SelectTrigger className="w-28">
+				<SelectValue placeholder={placeholder} />
+			</SelectTrigger>
+			<SelectContent>
+				<SelectItem value="Fire">Fire</SelectItem>
+				<SelectItem value="Water">Water</SelectItem>
+				<SelectItem value="Grass">Grass</SelectItem>
+			</SelectContent>
+		</Select>
 	);
 }

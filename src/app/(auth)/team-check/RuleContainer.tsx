@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
-import { MoveRule } from "./rules";
+import { MoveRule, ResistTypeRule } from "./rules";
 
 export default function RuleContainer() {
 	const [, setRule] = useAtom(ruleAtom);
@@ -40,7 +40,19 @@ export default function RuleContainer() {
 							/>
 						</li>
 						<Separator className="my-4" />
-						<li>隊伍中對於屬性具備抗性</li>
+						<li>
+							<ResistTypeRule
+								addRule={(targetType) => {
+									setRule((prev) => [
+										...prev,
+										{
+											type: "resistType",
+											targetType,
+										},
+									]);
+								}}
+							/>
+						</li>
 						<Separator className="my-4" />
 						<li>隊伍中具備對特定屬性具備倍率效果之招式</li>
 						<Separator className="my-4" />
