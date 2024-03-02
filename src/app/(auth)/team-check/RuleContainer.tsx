@@ -11,7 +11,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
-import { MoveRule, ResistTypeRule } from "./rules";
+import {
+	EffectiveAgainstTypeRule,
+	HasStatRule,
+	MoveRule,
+	ResistTypeRule,
+} from "./rules";
 
 export default function RuleContainer() {
 	const [, setRule] = useAtom(ruleAtom);
@@ -54,11 +59,34 @@ export default function RuleContainer() {
 							/>
 						</li>
 						<Separator className="my-4" />
-						<li>隊伍中具備對特定屬性具備倍率效果之招式</li>
+						<li>
+							<EffectiveAgainstTypeRule
+								addRule={(targetType) => {
+									setRule((prev) => [
+										...prev,
+										{
+											type: "effectiveAgainst",
+											targetType,
+										},
+									]);
+								}}
+							/>
+						</li>
 						<Separator className="my-4" />
-						<li>隊伍中具備能力值高於特定數值之寶可夢</li>
-						<Separator className="my-4" />
-						<li>隊伍中具備能力值低於特定數值之寶可夢</li>
+						<li>
+							<HasStatRule
+								addRule={(ruleType, statKey, statValue) => {
+									setRule((prev) => [
+										...prev,
+										{
+											type: ruleType,
+											key: statKey,
+											value: statValue,
+										},
+									]);
+								}}
+							/>
+						</li>
 						<Separator className="my-4" />
 					</ul>
 				</ScrollArea>

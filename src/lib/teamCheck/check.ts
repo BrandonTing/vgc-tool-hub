@@ -16,6 +16,8 @@ type StatInput = {
 	value: number;
 };
 
+export type StatRule = "statAbove" | "statBelow";
+
 export type CheckRule =
 	| {
 			type: "hasMove";
@@ -30,10 +32,7 @@ export type CheckRule =
 			targetType: PokemonType;
 	  }
 	| ({
-			type: "statAbove";
-	  } & StatInput)
-	| ({
-			type: "statBelow";
+			type: StatRule;
 	  } & StatInput);
 
 type CheckResult = {
