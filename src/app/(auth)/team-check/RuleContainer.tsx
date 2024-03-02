@@ -21,7 +21,7 @@ import {
 export default function RuleContainer() {
 	const [, setRule] = useAtom(ruleAtom);
 	return (
-		<Card>
+		<Card className="h-full">
 			<CardHeader>
 				<CardTitle>檢驗規則</CardTitle>
 				<CardDescription>
@@ -44,7 +44,7 @@ export default function RuleContainer() {
 								}}
 							/>
 						</li>
-						<Separator className="my-4" />
+						<Separator className="my-2" />
 						<li>
 							<ResistTypeRule
 								addRule={(targetType) => {
@@ -58,7 +58,7 @@ export default function RuleContainer() {
 								}}
 							/>
 						</li>
-						<Separator className="my-4" />
+						<Separator className="my-2" />
 						<li>
 							<EffectiveAgainstTypeRule
 								addRule={(targetType) => {
@@ -72,7 +72,7 @@ export default function RuleContainer() {
 								}}
 							/>
 						</li>
-						<Separator className="my-4" />
+						<Separator className="my-2" />
 						<li>
 							<HasStatRule
 								addRule={(ruleType, statKey, statValue) => {
@@ -87,7 +87,7 @@ export default function RuleContainer() {
 								}}
 							/>
 						</li>
-						<Separator className="my-4" />
+						<Separator className="my-2" />
 					</ul>
 				</ScrollArea>
 			</CardContent>

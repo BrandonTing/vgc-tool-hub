@@ -233,7 +233,7 @@ function RuleWrapper({
 	clickHandler: FormEventHandler<HTMLButtonElement>;
 }) {
 	return (
-		<div className="flex justify-between gap-2">
+		<div className="flex justify-between gap-2 py-2">
 			<div className="flex justify-between flex-grow">{children}</div>
 			<Button disabled={buttonDisabled} onClick={clickHandler}>
 				<Plus />

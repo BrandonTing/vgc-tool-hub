@@ -1,23 +1,27 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Moves } from "@/lib/teamCheck/moves";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
 import { Fragment } from "react";
+import { checkResult } from "./actions";
 
 export default function SelectedContainer() {
 	const [rules] = useAtom(ruleAtom);
 	return (
-		<Card>
+		<Card className="h-full">
 			<CardHeader>
 				<CardTitle>已選擇的規則</CardTitle>
 				<CardDescription>目前您所選擇的規則</CardDescription>
@@ -36,8 +40,34 @@ export default function SelectedContainer() {
 											<li>隊伍中需含有招式：{Moves[rule.move].name}</li>
 										);
 										break;
+									case "resistType":
+										key = `resistType_${rule.targetType.join(", ")}`;
+										content = <li>對{rule.targetType.join(", ")}具有抗性</li>;
+										break;
+									case "effectiveAgainst":
+										key = `effectiveAgainst_${rule.targetType.join(", ")}`;
+										content = (
+											<li>對{rule.targetType.join(", ")}具有倍率招式</li>
+										);
+										break;
+									case "statAbove":
+										key = `statAbove_${rule.key}_${rule.value}`;
+										content = (
+											<li>
+												包含{rule.key}大於{rule.value}的寶可夢
+											</li>
+										);
+										break;
+									case "statBelow":
+										key = `statBelow_${rule.key}_${rule.value}`;
+										content = (
+											<li>
+												包含{rule.key}小於{rule.value}的寶可夢
+											</li>
+										);
+										break;
 									default:
-										content = <li>a rule</li>;
+										break;
 								}
 								return (
 									<Fragment key={key}>
@@ -52,6 +82,19 @@ export default function SelectedContainer() {
 					)}
 				</ScrollArea>
 			</CardContent>
+			<CardFooter>
+				{/* TODO Form */}
+				<form className="flex justify-end gap-2 w-full" action={checkResult}>
+					<Input
+						type="url"
+						name="paste"
+						className="w-40"
+						placeholder="請貼上paste"
+						required
+					/>
+					<Button type="submit">檢查</Button>
+				</form>
+			</CardFooter>
 		</Card>
 	);
 }
