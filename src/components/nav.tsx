@@ -43,7 +43,7 @@ export default function Nav() {
 					key={path.url}
 					url={path.url}
 					label={path.label}
-					isActive={path.url === pathname}
+					isActive={pathname.includes(path.url)}
 				/>
 			))}
 		</nav>

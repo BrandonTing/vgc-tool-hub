@@ -15,11 +15,14 @@ import { Separator } from "@/components/ui/separator";
 import { Moves } from "@/lib/teamCheck/moves";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
+import { useAction } from "next-safe-action/hooks";
 import { Fragment } from "react";
-import { checkResult } from "./actions";
+import { checkResultAction } from "./actions";
 
 export default function SelectedContainer() {
 	const [rules] = useAtom(ruleAtom);
+	const { execute, result } = useAction(checkResultAction);
+	console.log(result);
 	return (
 		<Card className="h-full">
 			<CardHeader>
@@ -82,16 +85,12 @@ export default function SelectedContainer() {
 					)}
 				</ScrollArea>
 			</CardContent>
-			<CardFooter>
-				{/* TODO Form */}
-				<form className="flex justify-end gap-2 w-full" action={checkResult}>
-					<Input
-						type="url"
-						name="paste"
-						className="w-40"
-						placeholder="請貼上paste"
-						required
-					/>
+			<CardFooter className="gap-2">
+				{result.validationErrors ? (
+					<span className="text-red-600">{result.validationErrors.paste}</span>
+				) : null}
+				<form className="w-full flex justify-end gap-2" action={execute}>
+					<Input type="url" name="paste" placeholder="請貼上paste" required />
 					<Button type="submit">檢查</Button>
 				</form>
 			</CardFooter>
