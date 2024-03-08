@@ -9,12 +9,14 @@ export type MoveList = Record<
 export type Type = Pokemon["types"][number];
 type StatKey = keyof (Pokemon["stats"] & {});
 
-type PokemonType = Array<Type>;
+export type PokemonType = Array<Type>;
 
 type StatInput = {
 	key: StatKey;
 	value: number;
 };
+
+export type StatRule = "statAbove" | "statBelow";
 
 export type CheckRule =
 	| {
@@ -30,10 +32,7 @@ export type CheckRule =
 			targetType: PokemonType;
 	  }
 	| ({
-			type: "statAbove";
-	  } & StatInput)
-	| ({
-			type: "statBelow";
+			type: StatRule;
 	  } & StatInput);
 
 type CheckResult = {
