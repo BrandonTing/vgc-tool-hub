@@ -1,18 +1,12 @@
 "use server";
 
-import { action } from "@/lib/safe-actions";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { zfd } from "zod-form-data";
+import { checkResultSchema } from "./selectedContainer";
 
-const schema = zfd.formData({
-	paste: z
-		.string()
-		.url()
-		.regex(/https:\/\/pokepast.es\/[a-z0-9]{1,}/),
-});
-
-export const checkResultAction = action(schema, ({ paste }) => {
+export const checkResultAction = ({
+	paste,
+}: z.infer<typeof checkResultSchema>) => {
 	console.log(paste);
 	return redirect("./team-check/result");
-});
+};

@@ -15,14 +15,36 @@ import { Separator } from "@/components/ui/separator";
 import { Moves } from "@/lib/teamCheck/moves";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
-import { useAction } from "next-safe-action/hooks";
 import { Fragment } from "react";
+import { z } from "zod";
+
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { checkResultAction } from "./actions";
+
+export const checkResultSchema = z.object({
+	paste: z.string().regex(/https:\/\/pokepast.es\/[a-z0-9]{1,}/, {
+		message: "格式不符",
+	}),
+});
 
 export default function SelectedContainer() {
 	const [rules] = useAtom(ruleAtom);
-	const { execute, result } = useAction(checkResultAction);
-	console.log(result);
+
+	const form = useForm<z.infer<typeof checkResultSchema>>({
+		resolver: zodResolver(checkResultSchema),
+		defaultValues: {
+			paste: "",
+		},
+	});
+	const onSubmit = form.handleSubmit(checkResultAction);
 	return (
 		<Card className="h-full">
 			<CardHeader>
@@ -30,7 +52,7 @@ export default function SelectedContainer() {
 				<CardDescription>目前您所選擇的規則</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<ScrollArea className="h-80">
+				<ScrollArea className="h-72">
 					{rules.length ? (
 						<ul>
 							{rules.map((rule) => {
@@ -85,14 +107,24 @@ export default function SelectedContainer() {
 					)}
 				</ScrollArea>
 			</CardContent>
-			<CardFooter className="gap-2">
-				{result.validationErrors ? (
-					<span className="text-red-600">{result.validationErrors.paste}</span>
-				) : null}
-				<form className="w-full flex justify-end gap-2" action={execute}>
-					<Input type="url" name="paste" placeholder="請貼上paste" required />
-					<Button type="submit">檢查</Button>
-				</form>
+			<CardFooter>
+				<Form {...form}>
+					<form onSubmit={onSubmit} className="w-full flex justify-end gap-2">
+						<FormField
+							control={form.control}
+							name="paste"
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<Input placeholder="請提供paste url" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">檢查</Button>
+					</form>
+				</Form>
 			</CardFooter>
 		</Card>
 	);
