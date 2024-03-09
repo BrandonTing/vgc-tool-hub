@@ -12,9 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Moves } from "@/lib/teamCheck/moves";
 import { ruleAtom } from "@/store/rules";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { Fragment } from "react";
 import { z } from "zod";
 
@@ -25,9 +24,10 @@ import {
 	FormItem,
 	FormMessage,
 } from "@/components/ui/form";
+import { genContextForRules } from "@/lib/teamCheck/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { checkResultAction } from "./actions";
 
 export const checkResultSchema = z.object({
 	paste: z.string().regex(/https:\/\/pokepast.es\/[a-z0-9]{1,}/, {
@@ -35,8 +35,13 @@ export const checkResultSchema = z.object({
 	}),
 });
 
-export default function SelectedContainer() {
-	const [rules] = useAtom(ruleAtom);
+export default function SelectedContainer({
+	hideRules,
+}: { hideRules: () => void }) {
+	const rules = useAtomValue(ruleAtom);
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
 
 	const form = useForm<z.infer<typeof checkResultSchema>>({
 		resolver: zodResolver(checkResultSchema),
@@ -44,7 +49,15 @@ export default function SelectedContainer() {
 			paste: "",
 		},
 	});
-	const onSubmit = form.handleSubmit(checkResultAction);
+	const onSubmit = form.handleSubmit(({ paste }) => {
+		const current = new URLSearchParams(Array.from(searchParams.entries()));
+		current.set("pasteUrl", paste);
+		const search = current.toString();
+		const query = search ? `?${search}` : "";
+
+		router.push(`${pathname}${query}`);
+		hideRules();
+	});
 	return (
 		<Card className="h-full">
 			<CardHeader>
@@ -56,47 +69,10 @@ export default function SelectedContainer() {
 					{rules.length ? (
 						<ul>
 							{rules.map((rule) => {
-								let key = "";
-								let content = null;
-								switch (rule.type) {
-									case "hasMove":
-										key = rule.move;
-										content = (
-											<li>隊伍中需含有招式：{Moves[rule.move].name}</li>
-										);
-										break;
-									case "resistType":
-										key = `resistType_${rule.targetType.join(", ")}`;
-										content = <li>對{rule.targetType.join(", ")}具有抗性</li>;
-										break;
-									case "effectiveAgainst":
-										key = `effectiveAgainst_${rule.targetType.join(", ")}`;
-										content = (
-											<li>對{rule.targetType.join(", ")}具有倍率招式</li>
-										);
-										break;
-									case "statAbove":
-										key = `statAbove_${rule.key}_${rule.value}`;
-										content = (
-											<li>
-												包含{rule.key}大於{rule.value}的寶可夢
-											</li>
-										);
-										break;
-									case "statBelow":
-										key = `statBelow_${rule.key}_${rule.value}`;
-										content = (
-											<li>
-												包含{rule.key}小於{rule.value}的寶可夢
-											</li>
-										);
-										break;
-									default:
-										break;
-								}
+								const { key, content } = genContextForRules(rule);
 								return (
 									<Fragment key={key}>
-										{content}
+										<li>{content}</li>
 										<Separator className="my-2" />
 									</Fragment>
 								);
@@ -122,7 +98,9 @@ export default function SelectedContainer() {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit">檢查</Button>
+						<Button type="submit" disabled={rules.length === 0}>
+							檢查
+						</Button>
 					</form>
 				</Form>
 			</CardFooter>

@@ -10,7 +10,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ruleAtom } from "@/store/rules";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import {
 	EffectiveAgainstTypeRule,
 	HasStatRule,
@@ -18,8 +18,8 @@ import {
 	ResistTypeRule,
 } from "./rules";
 
-export default function RuleContainer() {
-	const [, setRule] = useAtom(ruleAtom);
+export default function UnSelectedContainer() {
+	const setRule = useSetAtom(ruleAtom);
 	return (
 		<Card className="h-full">
 			<CardHeader>
