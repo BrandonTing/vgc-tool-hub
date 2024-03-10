@@ -27,7 +27,7 @@ export function Result() {
 	}
 	const checkResults = check(rules, pokemons);
 	return (
-		<ul className="flex justify-center">
+		<ul className="text-center">
 			{checkResults.map((result, i) => {
 				const { key, content } = genContextForRules(rules[i]);
 				return (

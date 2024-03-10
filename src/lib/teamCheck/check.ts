@@ -93,12 +93,14 @@ function checkHasEffectiveMoveAgainstType(
 	targetType: PokemonType,
 ): CheckResult {
 	function helper(pokemon: Pokemon): boolean {
+		console.log(pokemon.moves);
 		if (!pokemon.moves) return false;
 		for (const move of pokemon.moves) {
-			if (!Moves[move]) continue;
-			if (Moves[move].category === "Status") continue;
+			const moveKey = move.replaceAll(" ", "").toLowerCase();
+			if (!Moves[moveKey]) continue;
+			if (Moves[moveKey].category === "Status") continue;
 			const effectiveness = getEffectivenessOnPokemon(
-				Moves[move].type as Type,
+				Moves[moveKey].type as Type,
 				targetType,
 			);
 			if (effectiveness > 1) return true;
