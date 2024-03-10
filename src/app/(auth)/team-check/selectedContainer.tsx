@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ruleAtom } from "@/store/rules";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { Fragment } from "react";
 import { z } from "zod";
 
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { genContextForRules } from "@/lib/teamCheck/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Delete } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -38,7 +39,7 @@ export const checkResultSchema = z.object({
 export default function SelectedContainer({
 	hideRules,
 }: { hideRules: () => void }) {
-	const rules = useAtomValue(ruleAtom);
+	const [rules, setRules] = useAtom(ruleAtom);
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -46,7 +47,7 @@ export default function SelectedContainer({
 	const form = useForm<z.infer<typeof checkResultSchema>>({
 		resolver: zodResolver(checkResultSchema),
 		defaultValues: {
-			paste: "",
+			paste: searchParams.get("pasteUrl") ?? "",
 		},
 	});
 	const onSubmit = form.handleSubmit(({ paste }) => {
@@ -68,11 +69,22 @@ export default function SelectedContainer({
 				<ScrollArea className="h-72">
 					{rules.length ? (
 						<ul>
-							{rules.map((rule) => {
+							{rules.map((rule, i) => {
 								const { key, content } = genContextForRules(rule);
 								return (
 									<Fragment key={key}>
-										<li>{content}</li>
+										<li className="flex justify-between">
+											{content}
+											<Button variant="ghost">
+												<Delete
+													onClick={() => {
+														setRules((prev) => {
+															return prev.filter((_, index) => index !== i);
+														});
+													}}
+												/>
+											</Button>
+										</li>
 										<Separator className="my-2" />
 									</Fragment>
 								);
