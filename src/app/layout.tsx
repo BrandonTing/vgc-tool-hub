@@ -1,8 +1,6 @@
 import { cn } from "@/lib/utils";
 import JotaiProvider from "@/store/provider";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Theme } from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
 import "@total-typescript/ts-reset";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -21,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 }: Readonly<{
-	children: React.ReactNode;
+	children: JSX.Element;
 }>) {
 	return (
 		<ClerkProvider>
@@ -32,9 +30,7 @@ export default function RootLayout({
 						fontSans.variable,
 					)}
 				>
-					<JotaiProvider>
-						<Theme className="h-full">{children}</Theme>
-					</JotaiProvider>
+					<JotaiProvider>{children}</JotaiProvider>
 				</body>
 			</html>
 		</ClerkProvider>
