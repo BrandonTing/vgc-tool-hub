@@ -47,6 +47,7 @@ export function check(
 	rules: Array<CheckRule>,
 	pokemons: Array<Pokemon>,
 ): Array<CheckResultWithRule> {
+	console.log(pokemons);
 	return rules
 		.map((rule) => {
 			switch (rule.type) {
@@ -98,7 +99,6 @@ function checkHasResistAgainstMoveType(
 	moveType: PokemonType,
 ): CheckResult {
 	function helper(pokemon: Pokemon): boolean {
-		console.log(pokemon);
 		let effectiveness = 1;
 		for (const type of moveType) {
 			effectiveness =
@@ -115,7 +115,6 @@ function checkHasEffectiveMoveAgainstType(
 	targetType: PokemonType,
 ): CheckResult {
 	function helper(pokemon: Pokemon): boolean {
-		console.log(pokemon.moves);
 		if (!pokemon.moves) return false;
 		for (const move of pokemon.moves) {
 			const moveKey = move.replaceAll(" ", "").toLowerCase();
