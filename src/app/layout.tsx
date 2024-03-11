@@ -2,10 +2,11 @@ import { cn } from "@/lib/utils";
 import JotaiProvider from "@/store/provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import "@total-typescript/ts-reset";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ReactNode } from "react";
 import "./globals.css";
-
 const fontSans = Inter({
 	subsets: ["latin"],
 	variable: "--font-sans",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 }: Readonly<{
-	children: JSX.Element;
+	children: ReactNode;
 }>) {
 	return (
 		<ClerkProvider>
@@ -30,7 +31,12 @@ export default function RootLayout({
 						fontSans.variable,
 					)}
 				>
-					<JotaiProvider>{children}</JotaiProvider>
+					<JotaiProvider>
+						<>
+							{children}
+							<SpeedInsights />
+						</>
+					</JotaiProvider>
 				</body>
 			</html>
 		</ClerkProvider>

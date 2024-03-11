@@ -47,7 +47,6 @@ export function check(
 	rules: Array<CheckRule>,
 	pokemons: Array<Pokemon>,
 ): Array<CheckResultWithRule> {
-	console.log(pokemons);
 	return rules
 		.map((rule) => {
 			switch (rule.type) {
