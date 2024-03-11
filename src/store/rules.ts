@@ -1,4 +1,5 @@
 import { CheckRule } from "@/lib/teamCheck/check";
-import { atom } from "jotai";
+// import { atomWithLocalStorage } from "./helper";
+import { atomWithStorage } from "jotai/utils";
 
-export const ruleAtom = atom<Array<CheckRule>>([]);
+export const ruleAtom = atomWithStorage<Array<CheckRule>>("rules", []);

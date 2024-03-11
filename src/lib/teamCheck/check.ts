@@ -39,11 +39,14 @@ type CheckResult = {
 	isMatch: boolean;
 	matchedPokemons: Array<Pokemon>;
 };
+type CheckResultWithRule = CheckResult & {
+	rule: CheckRule;
+};
 
 export function check(
 	rules: Array<CheckRule>,
 	pokemons: Array<Pokemon>,
-): Array<CheckResult> {
+): Array<CheckResultWithRule> {
 	return rules
 		.map((rule) => {
 			switch (rule.type) {
@@ -61,7 +64,20 @@ export function check(
 					return;
 			}
 		})
-		.filter(Boolean);
+		.filter(Boolean)
+		.map((result, i) => ({
+			...result,
+			rule: rules[i],
+		}))
+		.sort((a, b) => {
+			if (!a.isMatch && b.isMatch) {
+				return -1;
+			}
+			if (a.isMatch && !b.isMatch) {
+				return 1;
+			}
+			return 0;
+		});
 }
 
 function checkHasMove(pokemons: Array<Pokemon>, move: string): CheckResult {
@@ -93,12 +109,14 @@ function checkHasEffectiveMoveAgainstType(
 	targetType: PokemonType,
 ): CheckResult {
 	function helper(pokemon: Pokemon): boolean {
+		console.log(pokemon.moves);
 		if (!pokemon.moves) return false;
 		for (const move of pokemon.moves) {
-			if (!Moves[move]) continue;
-			if (Moves[move].category === "Status") continue;
+			const moveKey = move.replaceAll(" ", "").toLowerCase();
+			if (!Moves[moveKey]) continue;
+			if (Moves[moveKey].category === "Status") continue;
 			const effectiveness = getEffectivenessOnPokemon(
-				Moves[move].type as Type,
+				Moves[moveKey].type as Type,
 				targetType,
 			);
 			if (effectiveness > 1) return true;

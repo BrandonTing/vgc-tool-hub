@@ -12,14 +12,53 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Moves } from "@/lib/teamCheck/moves";
 import { ruleAtom } from "@/store/rules";
 import { useAtom } from "jotai";
 import { Fragment } from "react";
-import { checkResult } from "./actions";
+import { z } from "zod";
 
-export default function SelectedContainer() {
-	const [rules] = useAtom(ruleAtom);
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
+import { genContextForRules } from "@/lib/teamCheck/helper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Delete } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+
+export const checkResultSchema = z.object({
+	paste: z.string().regex(/https:\/\/pokepast.es\/[a-z0-9]{1,}/, {
+		message: "格式不符",
+	}),
+});
+
+export default function SelectedContainer({
+	hideRules,
+}: { hideRules: () => void }) {
+	const [rules, setRules] = useAtom(ruleAtom);
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	const form = useForm<z.infer<typeof checkResultSchema>>({
+		resolver: zodResolver(checkResultSchema),
+		defaultValues: {
+			paste: searchParams.get("pasteUrl") ?? "",
+		},
+	});
+	const onSubmit = form.handleSubmit(({ paste }) => {
+		const current = new URLSearchParams(Array.from(searchParams.entries()));
+		current.set("pasteUrl", paste);
+		const search = current.toString();
+		const query = search ? `?${search}` : "";
+
+		router.push(`${pathname}${query}`);
+		hideRules();
+	});
 	return (
 		<Card className="h-full">
 			<CardHeader>
@@ -27,51 +66,25 @@ export default function SelectedContainer() {
 				<CardDescription>目前您所選擇的規則</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<ScrollArea className="h-80">
+				<ScrollArea className="h-72">
 					{rules.length ? (
 						<ul>
-							{rules.map((rule) => {
-								let key = "";
-								let content = null;
-								switch (rule.type) {
-									case "hasMove":
-										key = rule.move;
-										content = (
-											<li>隊伍中需含有招式：{Moves[rule.move].name}</li>
-										);
-										break;
-									case "resistType":
-										key = `resistType_${rule.targetType.join(", ")}`;
-										content = <li>對{rule.targetType.join(", ")}具有抗性</li>;
-										break;
-									case "effectiveAgainst":
-										key = `effectiveAgainst_${rule.targetType.join(", ")}`;
-										content = (
-											<li>對{rule.targetType.join(", ")}具有倍率招式</li>
-										);
-										break;
-									case "statAbove":
-										key = `statAbove_${rule.key}_${rule.value}`;
-										content = (
-											<li>
-												包含{rule.key}大於{rule.value}的寶可夢
-											</li>
-										);
-										break;
-									case "statBelow":
-										key = `statBelow_${rule.key}_${rule.value}`;
-										content = (
-											<li>
-												包含{rule.key}小於{rule.value}的寶可夢
-											</li>
-										);
-										break;
-									default:
-										break;
-								}
+							{rules.map((rule, i) => {
+								const { key, content } = genContextForRules(rule);
 								return (
 									<Fragment key={key}>
-										{content}
+										<li className="flex justify-between">
+											{content}
+											<Button variant="ghost">
+												<Delete
+													onClick={() => {
+														setRules((prev) => {
+															return prev.filter((_, index) => index !== i);
+														});
+													}}
+												/>
+											</Button>
+										</li>
 										<Separator className="my-2" />
 									</Fragment>
 								);
@@ -83,17 +96,25 @@ export default function SelectedContainer() {
 				</ScrollArea>
 			</CardContent>
 			<CardFooter>
-				{/* TODO Form */}
-				<form className="flex justify-end gap-2 w-full" action={checkResult}>
-					<Input
-						type="url"
-						name="paste"
-						className="w-40"
-						placeholder="請貼上paste"
-						required
-					/>
-					<Button type="submit">檢查</Button>
-				</form>
+				<Form {...form}>
+					<form onSubmit={onSubmit} className="w-full flex justify-end gap-2">
+						<FormField
+							control={form.control}
+							name="paste"
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<Input placeholder="請提供paste url" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" disabled={rules.length === 0}>
+							檢查
+						</Button>
+					</form>
+				</Form>
 			</CardFooter>
 		</Card>
 	);
