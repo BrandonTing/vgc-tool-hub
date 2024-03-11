@@ -39,11 +39,14 @@ type CheckResult = {
 	isMatch: boolean;
 	matchedPokemons: Array<Pokemon>;
 };
+type CheckResultWithRule = CheckResult & {
+	rule: CheckRule;
+};
 
 export function check(
 	rules: Array<CheckRule>,
 	pokemons: Array<Pokemon>,
-): Array<CheckResult> {
+): Array<CheckResultWithRule> {
 	return rules
 		.map((rule) => {
 			switch (rule.type) {
@@ -61,7 +64,20 @@ export function check(
 					return;
 			}
 		})
-		.filter(Boolean);
+		.filter(Boolean)
+		.map((result, i) => ({
+			...result,
+			rule: rules[i],
+		}))
+		.sort((a, b) => {
+			if (!a.isMatch && b.isMatch) {
+				return -1;
+			}
+			if (a.isMatch && !b.isMatch) {
+				return 1;
+			}
+			return 0;
+		});
 }
 
 function checkHasMove(pokemons: Array<Pokemon>, move: string): CheckResult {
