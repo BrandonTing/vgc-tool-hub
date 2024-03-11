@@ -16,7 +16,7 @@ export default function RulesContainer() {
 	const rules = useAtomValue(ruleAtom);
 
 	const [isOpen, setIsOpen] = useState(
-		() => !qs.get("pasteUrl") || rules.length === 0,
+		() => !qs.get("pasteID") || rules.length === 0,
 	);
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">

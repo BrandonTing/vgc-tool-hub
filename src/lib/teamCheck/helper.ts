@@ -33,3 +33,7 @@ export function genContextForRules(rule: CheckRule): {
 	}
 	return { key, content };
 }
+export const pasteDelimiter = "https://pokepast.es/";
+export function genPasteUrl(id: string) {
+	return `${pasteDelimiter}${id}`;
+}

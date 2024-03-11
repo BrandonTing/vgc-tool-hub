@@ -10,7 +10,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { check } from "@/lib/teamCheck/check";
-import { genContextForRules } from "@/lib/teamCheck/helper";
+import { genContextForRules, genPasteUrl } from "@/lib/teamCheck/helper";
 import { pastesAtom } from "@/store/pokemons";
 import { ruleAtom } from "@/store/rules";
 import { useAtom, useAtomValue } from "jotai";
@@ -20,11 +20,13 @@ import { use } from "react";
 import { getPokemonsFromPasteUrl } from "vgc_data_wrapper";
 
 export function Result() {
-	const pasteUrl = useSearchParams().get("pasteUrl");
+	const pasteID = useSearchParams().get("pasteID");
 	const rules = useAtomValue(ruleAtom);
 	const [pokemonsFromStore, setPokemons] = useAtom(pastesAtom);
 
-	if (!pasteUrl || rules.length === 0) return null;
+	if (!pasteID || rules.length === 0) return null;
+	const pasteUrl = genPasteUrl(pasteID);
+	console.log(pasteUrl);
 	let pokemons = pokemonsFromStore[pasteUrl];
 	if (!pokemons) {
 		// FIXME too many query times

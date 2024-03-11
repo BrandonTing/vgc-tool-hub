@@ -24,7 +24,11 @@ import {
 	FormItem,
 	FormMessage,
 } from "@/components/ui/form";
-import { genContextForRules } from "@/lib/teamCheck/helper";
+import {
+	genContextForRules,
+	genPasteUrl,
+	pasteDelimiter,
+} from "@/lib/teamCheck/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Delete } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -43,16 +47,17 @@ export default function SelectedContainer({
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-
+	const id = searchParams.get("pasteID");
+	const defaultUrl = id ? genPasteUrl(id) : "";
 	const form = useForm<z.infer<typeof checkResultSchema>>({
 		resolver: zodResolver(checkResultSchema),
 		defaultValues: {
-			paste: searchParams.get("pasteUrl") ?? "",
+			paste: defaultUrl,
 		},
 	});
 	const onSubmit = form.handleSubmit(({ paste }) => {
 		const current = new URLSearchParams(Array.from(searchParams.entries()));
-		current.set("pasteUrl", paste);
+		current.set("pasteID", paste.split(pasteDelimiter)[1]);
 		const search = current.toString();
 		const query = search ? `?${search}` : "";
 
