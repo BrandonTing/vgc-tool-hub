@@ -35,6 +35,6 @@
   ],
   "exclude": [
     "node_modules",
-    "./src/script/convertShowdownMove.ts"
+    "./src/__script__/convertShowdownMove.ts"
   ]
 }

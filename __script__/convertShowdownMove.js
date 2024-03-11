@@ -9,10 +9,7 @@ const converted = Object.entries(Moves).reduce(
 		};
 		return pre;
 	},
-	{} as Record<
-		string,
-		{ type: string; basePower: number; category: string; name: string }
-	>,
+	{},
 );
 Bun.write(
 	"./src/lib/teamcheck/moves.ts",

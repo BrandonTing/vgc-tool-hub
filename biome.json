@@ -10,6 +10,6 @@
 		}
 	},
 	"files": {
-		"ignore": ["./src/script/*.ts"]
+		"ignore": ["./src/__script__/*.ts"]
 	}
 }
