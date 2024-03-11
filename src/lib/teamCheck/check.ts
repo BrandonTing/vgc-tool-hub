@@ -82,7 +82,12 @@ export function check(
 
 function checkHasMove(pokemons: Array<Pokemon>, move: string): CheckResult {
 	function helper(pokemon: Pokemon): boolean {
-		return Boolean(pokemon.moves?.includes(move));
+		return Boolean(
+			pokemon.moves?.find((pokemonMove) => {
+				const moveKey = pokemonMove.replaceAll(" ", "").toLowerCase();
+				return moveKey === move;
+			}),
+		);
 	}
 
 	return loopPokemonsHelper(pokemons, helper);
@@ -93,6 +98,7 @@ function checkHasResistAgainstMoveType(
 	moveType: PokemonType,
 ): CheckResult {
 	function helper(pokemon: Pokemon): boolean {
+		console.log(pokemon);
 		let effectiveness = 1;
 		for (const type of moveType) {
 			effectiveness =
