@@ -16,7 +16,7 @@ import {
 	HasStatRule,
 	MoveRule,
 	ResistTypeRule,
-} from "./rules";
+} from "./ruleComponents";
 
 export default function UnSelectedContainer() {
 	const setRule = useSetAtom(ruleAtom);
