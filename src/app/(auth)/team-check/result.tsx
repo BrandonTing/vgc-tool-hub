@@ -60,17 +60,30 @@ export function Result() {
 								{result.isMatch
 									? result.matchedPokemons.map(({ pokemon, underTera }) => {
 											return pokemon.sprite ? (
-												<Image
-													width={50}
-													height={50}
-													alt={pokemon.name || ""}
-													src={pokemon.sprite}
+												// TODO display tera
+												<div
 													key={`${key}_${pokemon.name}_${
 														underTera
 															? pokemon.teraType
 															: pokemon.types.join("_")
 													}`}
-												/>
+													className="relative"
+												>
+													{underTera && (
+														<Image
+															src="/terastal.webp"
+															alt="tera"
+															className="absolute -z-10"
+															fill={true}
+														/>
+													)}
+													<Image
+														width={50}
+														height={50}
+														alt={pokemon.name || ""}
+														src={pokemon.sprite}
+													/>
+												</div>
 											) : (
 												pokemon.name
 											);
