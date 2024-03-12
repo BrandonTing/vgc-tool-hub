@@ -26,7 +26,6 @@ export function Result() {
 
 	if (!pasteID || rules.length === 0) return null;
 	const pasteUrl = genPasteUrl(pasteID);
-	console.log(pasteUrl);
 	let pokemons = pokemonsFromStore[pasteUrl];
 	if (!pokemons) {
 		// FIXME too many query times
@@ -59,17 +58,34 @@ export function Result() {
 							<TableCell>{result.isMatch ? "符合" : "不符合"}</TableCell>
 							<TableCell className="flex justify-start">
 								{result.isMatch
-									? result.matchedPokemons.map((mon) => {
-											return mon.sprite ? (
-												<Image
-													width={50}
-													height={50}
-													alt={mon.name || ""}
-													src={mon.sprite}
-													key={key + mon.name}
-												/>
+									? result.matchedPokemons.map(({ pokemon, underTera }) => {
+											return pokemon.sprite ? (
+												// TODO display tera
+												<div
+													key={`${key}_${pokemon.name}_${
+														underTera
+															? pokemon.teraType
+															: pokemon.types.join("_")
+													}`}
+													className="relative"
+												>
+													{underTera && (
+														<Image
+															src="/terastal.webp"
+															alt="tera"
+															className="absolute -z-10"
+															fill={true}
+														/>
+													)}
+													<Image
+														width={50}
+														height={50}
+														alt={pokemon.name || ""}
+														src={pokemon.sprite}
+													/>
+												</div>
 											) : (
-												mon.name
+												pokemon.name
 											);
 									  })
 									: "該找師父了"}
@@ -79,9 +95,5 @@ export function Result() {
 				})}
 			</TableBody>
 		</Table>
-
-		// <ul className="text-center">
-		// 	})}
-		// </ul>
 	);
 }
