@@ -2,10 +2,12 @@ import { cn } from "@/lib/utils";
 import JotaiProvider from "@/store/provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import "@total-typescript/ts-reset";
+import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+
 import "./globals.css";
 const fontSans = Inter({
 	subsets: ["latin"],
@@ -35,6 +37,7 @@ export default function RootLayout({
 						<>
 							{children}
 							<SpeedInsights />
+							<Analytics />
 						</>
 					</JotaiProvider>
 				</body>
