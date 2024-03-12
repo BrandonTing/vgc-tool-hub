@@ -66,6 +66,7 @@ export function Result() {
 													height={50}
 													alt={mon.name || ""}
 													src={mon.sprite}
+													key={key + mon.name}
 												/>
 											) : (
 												mon.name

@@ -117,12 +117,15 @@ function checkHasEffectiveMoveAgainstType(
 		if (!pokemon.moves) return false;
 		for (const move of pokemon.moves) {
 			const moveKey = move.replaceAll(" ", "").toLowerCase();
-			if (!Moves[moveKey]) continue;
-			if (Moves[moveKey].category === "Status") continue;
-			const effectiveness = getEffectivenessOnPokemon(
-				Moves[moveKey].type as Type,
-				targetType,
-			);
+			const moveInfo = Moves[moveKey];
+			if (!moveInfo) continue;
+			if (moveInfo.category === "Status") continue;
+			let type = moveInfo.type as Type;
+			// Ogerpon & Ivy Cudgel
+			if (moveInfo.name === "Ivy Cudgel") {
+				type = pokemon.types.find((type) => type !== "Grass") ?? "Grass";
+			}
+			const effectiveness = getEffectivenessOnPokemon(type, targetType);
 			if (effectiveness > 1) return true;
 		}
 		return false;
