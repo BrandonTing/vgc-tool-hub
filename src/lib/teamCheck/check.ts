@@ -110,14 +110,22 @@ function checkHasResistAgainstMoveType(
 ): CheckResult {
 	const helper: CheckCb = (pokemon) => {
 		let effectiveness = 1;
+		let effectivenessOnTera = 1;
 		for (const type of moveType) {
 			effectiveness =
 				effectiveness * getEffectivenessOnPokemon(type, pokemon.types);
+			effectivenessOnTera =
+				effectivenessOnTera *
+				getEffectivenessOnPokemon(type, [pokemon.teraType]);
 		}
 		// TODO count tera
 		return [
 			{
 				isMatch: effectiveness < 1,
+			},
+			{
+				isMatch: effectivenessOnTera < 1,
+				underTera: true,
 			},
 		];
 	};

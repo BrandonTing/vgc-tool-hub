@@ -65,7 +65,11 @@ export function Result() {
 													height={50}
 													alt={pokemon.name || ""}
 													src={pokemon.sprite}
-													key={key + pokemon.name}
+													key={`${key}_${pokemon.name}_${
+														underTera
+															? pokemon.teraType
+															: pokemon.types.join("_")
+													}`}
 												/>
 											) : (
 												pokemon.name
@@ -78,9 +82,5 @@ export function Result() {
 				})}
 			</TableBody>
 		</Table>
-
-		// <ul className="text-center">
-		// 	})}
-		// </ul>
 	);
 }
