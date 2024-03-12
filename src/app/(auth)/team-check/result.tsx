@@ -58,17 +58,17 @@ export function Result() {
 							<TableCell>{result.isMatch ? "符合" : "不符合"}</TableCell>
 							<TableCell className="flex justify-start">
 								{result.isMatch
-									? result.matchedPokemons.map((mon) => {
-											return mon.sprite ? (
+									? result.matchedPokemons.map(({ pokemon, underTera }) => {
+											return pokemon.sprite ? (
 												<Image
 													width={50}
 													height={50}
-													alt={mon.name || ""}
-													src={mon.sprite}
-													key={key + mon.name}
+													alt={pokemon.name || ""}
+													src={pokemon.sprite}
+													key={key + pokemon.name}
 												/>
 											) : (
-												mon.name
+												pokemon.name
 											);
 									  })
 									: "該找師父了"}

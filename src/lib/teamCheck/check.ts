@@ -37,7 +37,10 @@ export type CheckRule =
 
 type CheckResult = {
 	isMatch: boolean;
-	matchedPokemons: Array<Pokemon>;
+	matchedPokemons: Array<{
+		underTera: boolean;
+		pokemon: Pokemon;
+	}>;
 };
 type CheckResultWithRule = CheckResult & {
 	rule: CheckRule;
@@ -80,15 +83,23 @@ export function check(
 		});
 }
 
+type CheckCb = (
+	pokemon: Pokemon,
+) => Array<{ isMatch: boolean; underTera?: boolean }>;
+
 function checkHasMove(pokemons: Array<Pokemon>, move: string): CheckResult {
-	function helper(pokemon: Pokemon): boolean {
-		return Boolean(
-			pokemon.moves?.find((pokemonMove) => {
-				const moveKey = pokemonMove.replaceAll(" ", "").toLowerCase();
-				return moveKey === move;
-			}),
-		);
-	}
+	const helper: CheckCb = (pokemon) => {
+		return [
+			{
+				isMatch: Boolean(
+					pokemon.moves?.find((pokemonMove) => {
+						const moveKey = pokemonMove.replaceAll(" ", "").toLowerCase();
+						return moveKey === move;
+					}),
+				),
+			},
+		];
+	};
 
 	return loopPokemonsHelper(pokemons, helper);
 }
@@ -97,14 +108,19 @@ function checkHasResistAgainstMoveType(
 	pokemons: Array<Pokemon>,
 	moveType: PokemonType,
 ): CheckResult {
-	function helper(pokemon: Pokemon): boolean {
+	const helper: CheckCb = (pokemon) => {
 		let effectiveness = 1;
 		for (const type of moveType) {
 			effectiveness =
 				effectiveness * getEffectivenessOnPokemon(type, pokemon.types);
 		}
-		return effectiveness < 1;
-	}
+		// TODO count tera
+		return [
+			{
+				isMatch: effectiveness < 1,
+			},
+		];
+	};
 
 	return loopPokemonsHelper(pokemons, helper);
 }
@@ -113,8 +129,14 @@ function checkHasEffectiveMoveAgainstType(
 	pokemons: Array<Pokemon>,
 	targetType: PokemonType,
 ): CheckResult {
-	function helper(pokemon: Pokemon): boolean {
-		if (!pokemon.moves) return false;
+	const helper: CheckCb = (pokemon) => {
+		// FIXME code quality
+		if (!pokemon.moves)
+			return [
+				{
+					isMatch: false,
+				},
+			];
 		for (const move of pokemon.moves) {
 			const moveKey = move.replaceAll(" ", "").toLowerCase();
 			const moveInfo = Moves[moveKey];
@@ -126,10 +148,19 @@ function checkHasEffectiveMoveAgainstType(
 				type = pokemon.types.find((type) => type !== "Grass") ?? "Grass";
 			}
 			const effectiveness = getEffectivenessOnPokemon(type, targetType);
-			if (effectiveness > 1) return true;
+			if (effectiveness > 1)
+				return [
+					{
+						isMatch: true,
+					},
+				];
 		}
-		return false;
-	}
+		return [
+			{
+				isMatch: false,
+			},
+		];
+	};
 	return loopPokemonsHelper(pokemons, helper);
 }
 
@@ -138,9 +169,9 @@ function checkHasStatAbove(
 	key: StatInput["key"],
 	value: StatInput["value"],
 ): CheckResult {
-	function helper(pokemon: Pokemon): boolean {
-		return pokemon.getStat(key) > value;
-	}
+	const helper: CheckCb = (pokemon) => {
+		return [{ isMatch: pokemon.getStat(key) > value }];
+	};
 	return loopPokemonsHelper(pokemons, helper);
 }
 
@@ -149,21 +180,27 @@ function checkHasStatBelow(
 	key: StatInput["key"],
 	value: StatInput["value"],
 ): CheckResult {
-	function helper(pokemon: Pokemon): boolean {
-		return pokemon.getStat(key) < value;
-	}
+	const helper: CheckCb = (pokemon) => {
+		return [{ isMatch: pokemon.getStat(key) < value }];
+	};
 	return loopPokemonsHelper(pokemons, helper);
 }
 
 function loopPokemonsHelper(
 	pokemons: Array<Pokemon>,
-	cb: (pokemon: Pokemon) => boolean,
+	cb: CheckCb,
 ): CheckResult {
 	const matched = [];
 	for (const pokemon of pokemons) {
-		const match = cb(pokemon);
-		if (match) {
-			matched.push(pokemon);
+		const checkResultsOfMon = cb(pokemon);
+		for (const result of checkResultsOfMon) {
+			const { isMatch, underTera = false } = result;
+			if (isMatch) {
+				matched.push({
+					pokemon,
+					underTera,
+				});
+			}
 		}
 	}
 	return {
