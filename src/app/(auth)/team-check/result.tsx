@@ -26,7 +26,6 @@ export function Result() {
 
 	if (!pasteID || rules.length === 0) return null;
 	const pasteUrl = genPasteUrl(pasteID);
-	console.log(pasteUrl);
 	let pokemons = pokemonsFromStore[pasteUrl];
 	if (!pokemons) {
 		// FIXME too many query times
