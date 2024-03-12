@@ -73,7 +73,7 @@ export function Result() {
 														<Image
 															src="/terastal.webp"
 															alt="tera"
-															className="absolute -z-10"
+															className="absolute opacity-70"
 															fill={true}
 														/>
 													)}
