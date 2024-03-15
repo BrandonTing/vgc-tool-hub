@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
@@ -16,6 +17,7 @@ import {
 type Path = {
 	label: string;
 	url: `/${string}`;
+	roles?: Array<string>;
 };
 
 function Wrapper({
@@ -62,6 +64,15 @@ const paths: Array<Path> = [
 		label: "隊伍檢測",
 		url: "/team-check",
 	},
+	{
+		label: "意見回饋",
+		url: "/feedback",
+	},
+	{
+		label: "意見列表",
+		url: "/feedback/received",
+		roles: ["admin"],
+	},
 ];
 
 const externalPaths = [
@@ -71,19 +82,30 @@ const externalPaths = [
 		description: "中文化的傷害計算，即將推出新版",
 	},
 ] as const;
+
 export default function Nav() {
 	const pathname = usePathname();
+	const user = useUser();
+
 	return (
 		<NavigationMenu>
 			<NavigationMenuList>
-				{paths.map((path) => (
-					<NavLink
-						key={path.url}
-						url={path.url}
-						label={path.label}
-						isActive={pathname.includes(path.url)}
-					/>
-				))}
+				{paths.map((path) => {
+					if (
+						path.roles &&
+						!path.roles.includes(user?.user?.publicMetadata.role as string)
+					) {
+						return null;
+					}
+					return (
+						<NavLink
+							key={path.url}
+							url={path.url}
+							label={path.label}
+							isActive={pathname === path.url}
+						/>
+					);
+				})}
 				<NavigationMenuItem>
 					<NavigationMenuTrigger>其他工具</NavigationMenuTrigger>
 					<NavigationMenuContent>
