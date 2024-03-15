@@ -86,7 +86,6 @@ const externalPaths = [
 export default function Nav() {
 	const pathname = usePathname();
 	const user = useUser();
-
 	return (
 		<NavigationMenu>
 			<NavigationMenuList>
