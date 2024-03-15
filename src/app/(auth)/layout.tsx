@@ -9,9 +9,9 @@ export default function AuthLayout({
 	return (
 		<div className="flex h-full flex-col">
 			{/* Header */}
-			<header className="flex">
+			<header className="flex relative justify-center">
 				<Nav />
-				<span className="justify-center flex justify-self-end items-center pr-5">
+				<span className="absolute top-1/2 right-5 -translate-y-1/2">
 					<UserButton />
 				</span>
 			</header>
