@@ -15,16 +15,14 @@ import { pastesAtom } from "@/store/pokemons";
 import { ruleAtom } from "@/store/rules";
 import { useAtom, useAtomValue } from "jotai";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { use } from "react";
 import { getPokemonsFromPasteUrl } from "vgc_data_wrapper";
 
-export function Result() {
-	const pasteID = useSearchParams().get("pasteID");
+export default function Result({ pasteID }: { pasteID: string }) {
 	const rules = useAtomValue(ruleAtom);
 	const [pokemonsFromStore, setPokemons] = useAtom(pastesAtom);
 
-	if (!pasteID || rules.length === 0) return null;
+	if (rules.length === 0) return null;
 	const pasteUrl = genPasteUrl(pasteID);
 	let pokemons = pokemonsFromStore[pasteUrl];
 	if (!pokemons) {
@@ -34,6 +32,7 @@ export function Result() {
 			...pokemonsFromStore,
 			[pasteUrl]: pokemons,
 		});
+		return null;
 	}
 	const checkResults = check(rules, pokemons);
 	return (
