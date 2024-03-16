@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-move": "bun run ./__script__/convertShowdownMove"
+    "generate-move": "bun run ./__script__/convertShowdownMove",
+    "generate-migration": "drizzle-kit generate:pg"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
@@ -21,11 +22,14 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.5",
     "@vercel/analytics": "^1.2.2",
+    "@vercel/postgres": "^0.7.2",
     "@vercel/speed-insights": "^1.0.10",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
+    "drizzle-orm": "^0.30.2",
     "jotai": "^2.7.0",
     "lucide-react": "^0.343.0",
     "next": "14.1.0",
@@ -44,6 +48,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.17",
+    "drizzle-kit": "^0.20.14",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
