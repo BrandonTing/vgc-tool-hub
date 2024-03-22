@@ -37,6 +37,10 @@ export function MoveRule({
 	const canSubmit = useMemo(() => {
 		return Boolean(moveEntries.find(([key, _]) => key === moveKw));
 	}, [moveKw]);
+	function setMove(key: string) {
+		setMoveKw(key);
+		setShowSelect(false);
+	}
 	return (
 		<RuleWrapper
 			buttonDisabled={!canSubmit}
@@ -46,7 +50,7 @@ export function MoveRule({
 			}}
 		>
 			<span className="align-middle py-2">隊伍具備特定招式：</span>
-			<div className="relative">
+			<div>
 				<Input
 					className="w-60"
 					type="text"
@@ -58,18 +62,15 @@ export function MoveRule({
 					value={moveKw}
 				/>
 				{moves.length > 0 && showSelect ? (
-					<div className="absolute w-60 top-full mt-2">
-						<ScrollArea className="h-96 w-60">
-							<ul className="rounded border  bg-white cursor-pointer">
+					<div className="absolute w-60 top-full z-10">
+						<ScrollArea className="h-60 w-60 rounded border">
+							<ul className=" bg-white cursor-pointer ">
 								{moves.map(([key, move]) => (
-									// biome-ignore lint/a11y/useKeyWithClickEvents: TODO not for now
 									<li
 										key={key}
 										className="py-2 px-3 hover:bg-gray-300"
-										onClick={() => {
-											setMoveKw(key);
-											setShowSelect(false);
-										}}
+										onClick={() => setMove(key)}
+										onKeyDown={() => setMove(key)}
 									>
 										{move.name}
 									</li>
@@ -233,7 +234,7 @@ function RuleWrapper({
 	clickHandler: FormEventHandler<HTMLButtonElement>;
 }) {
 	return (
-		<div className="flex justify-between gap-2 py-2">
+		<div className="flex justify-between gap-2 py-2 relative">
 			<div className="flex justify-between flex-grow">{children}</div>
 			<Button disabled={buttonDisabled} onClick={clickHandler}>
 				<Plus />
